@@ -16,7 +16,6 @@ export class EventsGateway implements OnGatewayConnection {
   server: Server;
 
   sendData(message: string) {
-    console.log("Gateway message", message);
     this.server.emit('EmitData', message);
   }
 
