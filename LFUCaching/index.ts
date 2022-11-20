@@ -29,16 +29,6 @@ class LFU {
     this.tail.prev = this.head;
   }
 
-  private getKeyByValue(value: number): number {
-    for (let [entryKey, entryNode] of this.map.entries()) {
-      if (entryNode.value === value) {
-        return entryKey;
-      }
-    }
-
-    return 0;
-  }
-
   add(key: number, value: number): void {
     if (this.map.has(key)) {
       return;
@@ -74,24 +64,8 @@ class LFU {
     return current?.value as number;
   }
 
-  move(node: DoubleLinkedListNode) {
-    let current: DoubleLinkedListNode = this.head;
-
-    while (current !== null) {
-      if (current.count > node.count) {
-        current = current.next as DoubleLinkedListNode;
-      } else {
-        node.prev = current.prev;
-        node.next = current;
-        node.next.prev = node;
-        node.prev!!.next = node;
-        break;
-      }
-    }
-  }
-
   prettyPrint() {
-    console.log("Current LRU: ");
+    console.log("Current LFU: ");
     let current = this.head;
 
     while (current !== null) {
@@ -108,6 +82,32 @@ class LFU {
 
       current = current.next as DoubleLinkedListNode;
     }
+  }
+
+  private move(node: DoubleLinkedListNode) {
+    let current: DoubleLinkedListNode = this.head;
+
+    while (current !== null) {
+      if (current.count > node.count) {
+        current = current.next as DoubleLinkedListNode;
+      } else {
+        node.prev = current.prev;
+        node.next = current;
+        node.next.prev = node;
+        node.prev!!.next = node;
+        break;
+      }
+    }
+  }
+
+  private getKeyByValue(value: number): number {
+    for (let [entryKey, entryNode] of this.map.entries()) {
+      if (entryNode.value === value) {
+        return entryKey;
+      }
+    }
+
+    return 0;
   }
 }
 
